@@ -8,6 +8,7 @@ import time
 VALID_PATH = "C:\\users\\james\\pictures"
 INVALID_PATH = "C:\\hello"
 
+
 class Wallpaper(object):
     def __init__(self):
         if __debug__:
@@ -19,7 +20,6 @@ class Wallpaper(object):
         for image in self.images:
             self.loadImage(image)
             time.sleep(5)
-
 
     def load_images_from_folder(self, folder_path):
         """Loads folder images."""
@@ -33,7 +33,6 @@ class Wallpaper(object):
             for img in img_list:
                 if self.is_valid_image_format(img):
                     self.images.append(os.path.join(folder_path, img))
-
 
     @staticmethod
     def is_valid_image_format(imgpath):
@@ -55,7 +54,8 @@ class Wallpaper(object):
         if self._image_exists(img_path):
             try:
                 print("{} loaded.".format(img_path))
-                ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, img_path , 3)
+                ctypes.windll.user32.SystemParametersInfoW(
+                    SPI_SETDESKWALLPAPER, 0, img_path, 3)
             except Exception:
                 print(traceback.format_exc())
         else:
