@@ -23,16 +23,14 @@ class Wallpaper(object):
 
     def load_images_from_folder(self, folder_path):
         """Loads folder images."""
-        self.images = []
         img_list = []
+
         try:
             img_list = os.listdir(folder_path)
         except FileNotFoundError:
             print("Can't find directory {}".format(folder_path))
         else:
-            for img in img_list:
-                if self.is_valid_image_format(img):
-                    self.images.append(os.path.join(folder_path, img))
+            self.images = [os.path.join(folder_path, image) for image in img_list if self.is_valid_image_format(image)]
 
     @staticmethod
     def is_valid_image_format(imgpath):
