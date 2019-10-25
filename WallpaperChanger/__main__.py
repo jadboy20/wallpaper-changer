@@ -1,6 +1,6 @@
 import os
 import sys
-import app
+import WallpaperChanger.app as app
 
 
 def main():

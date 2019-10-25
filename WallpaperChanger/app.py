@@ -1,6 +1,6 @@
 import os
 import sys
-import wallpaper
+import WallpaperChanger.wallpaper as wallpaper
 
 class App(object):
 
