@@ -1,10 +1,14 @@
 import os
 import sys
 import WallpaperChanger.app as app
-from WallpaperChanger import __version__
 import argparse
+from WallpaperChanger import __version__
 
 def main():
+    args = parse_arguments()
+    app.App(args)
+
+def parse_arguments():
     # Initialise the arguments.
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--cycle-speed", help="Set the rate at which wallpapers change.")
@@ -22,8 +26,8 @@ def main():
         parser.print_help()
         sys.exit(1)
 
+    return args
 
-    app.App(args)
 
 if __name__ == "__main__":
     main()

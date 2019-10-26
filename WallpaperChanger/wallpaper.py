@@ -19,7 +19,6 @@ class Wallpaper(object):
         self.randomise = params.randomise
         random.seed()
 
-        self.vprint(params)
         # Set cycle_speed from argument if available. Otherwise, set it to 5 seconds.
         if params.cycle_speed is None:
             self.vprint("Cycle speed not defined. Setting to 5 seconds.")
@@ -39,7 +38,6 @@ class Wallpaper(object):
         if not os.path.exists(self.gallery_directory):
             self.vprint("Could not find {}\nExiting program!".format(self.gallery_directory))
             sys.exit(1)
-
 
         # Start program
         self.images = []
