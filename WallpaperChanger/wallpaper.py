@@ -10,16 +10,27 @@ INVALID_PATH = "C:\\hello"
 
 
 class Wallpaper(object):
-    def __init__(self):
+    def __init__(self, params):
         if __debug__:
             print("Wallpaper object created!")
 
         self.images = []
         self.load_images_from_folder(VALID_PATH)
+        self.verbose = params.verbose
+
+        if params.cycle_speed is None:
+            self.vprint("Cycle speed not defined. Setting to 5 seconds.")
+            self.cycle_speed = 5
+        else:
+            try:
+                self.cycle_speed = int(params.cycle_speed)
+            except ValueError:
+                print("{} is not a valid cycle speed. Setting to default 5 seconds.".format(params.cycle_speed))
 
         for image in self.images:
             self.loadImage(image)
-            time.sleep(5)
+            self.vprint("Waiting for {} seconds".format(self.cycle_speed))
+            time.sleep(self.cycle_speed)
 
     def load_images_from_folder(self, folder_path):
         """Loads folder images."""
@@ -58,3 +69,8 @@ class Wallpaper(object):
                 print(traceback.format_exc())
         else:
             print("{} does not exist!".format(img_path))
+
+    def vprint(self, message):
+        """Prints out the message only if program is run in verbose mode."""
+        if self.verbose:
+            print(message)

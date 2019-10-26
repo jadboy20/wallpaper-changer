@@ -7,15 +7,13 @@ import argparse
 class App(object):
 
     def __init__(self, args):
+        # Print received arguments.
+        print("Received arguments: ")
+        self.params = args
+
         self.run()
-        self.app_name = args[0]
-        self.args = self.initialise_args()
-
-
-
 
     def run(self):
-        # wp = wallpaper.Wallpaper()
-        pass
+        wp = wallpaper.Wallpaper(self.params)
 
 
