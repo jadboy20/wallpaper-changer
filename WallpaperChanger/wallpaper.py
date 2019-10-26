@@ -3,23 +3,70 @@ import sys
 import ctypes
 import traceback
 import time
-
+import random
 
 VALID_PATH = "C:\\users\\james\\pictures"
 INVALID_PATH = "C:\\hello"
 
+DEFAULT_GALLERY = os.path.join("c:\\", "users", "james", "pictures")
+
 
 class Wallpaper(object):
-    def __init__(self):
-        if __debug__:
-            print("Wallpaper object created!")
+    def __init__(self, params):
+        # Copy over argument parameters.
+        self.verbose = params.verbose
+        self.gallery_directory = params.gallery_directory
+        self.randomise = params.randomise
+        random.seed()
 
+        # Set cycle_speed from argument if available. Otherwise, set it to 5 seconds.
+        if params.cycle_speed is None:
+            self.vprint("Cycle speed not defined. Setting to 5 seconds.")
+            self.cycle_speed = 5
+        else:
+            try:
+                self.cycle_speed = int(params.cycle_speed)
+            except ValueError:
+                print("{} is not a valid cycle speed. Setting to default 5 seconds.".format(params.cycle_speed))
+
+        # Default gallery directory to C:/users/user/pictures if no parameter is given.
+        if self.gallery_directory is None:
+            self.vprint("Gallery directory not defined. Setting gallery directory to '{}' ".format(DEFAULT_GALLERY))
+            self.gallery_directory = DEFAULT_GALLERY
+
+        # Check if directory exists.
+        if not os.path.exists(self.gallery_directory):
+            self.vprint("Could not find {}\nExiting program!".format(self.gallery_directory))
+            sys.exit(1)
+
+        # Start program
         self.images = []
-        self.load_images_from_folder(VALID_PATH)
+        self.load_images_from_folder(self.gallery_directory)
 
-        for image in self.images:
-            self.loadImage(image)
-            time.sleep(5)
+        if self.randomise:
+            # Pick images out randomly, rather than in the order they are
+            # in the directory.
+            prev_num = -1
+
+            while True:
+                # Pick a number, any number!
+                rand_num = random.randint(0, len(self.images) - 1)
+                # Only pick number if its not the same as the last.
+                if prev_num != rand_num:
+                    # Possibly (but very unlikely) that will be out of range!
+                    try:
+                        self.loadImage(self.images[rand_num])
+                    except KeyError:
+                        self.vprint("Random number {} not in array range!".format(rand_num))
+
+                    time.sleep(self.cycle_speed)
+                    prev_num = rand_num
+        else:
+            while True:
+                for image in self.images:
+                    self.loadImage(image)
+                    self.vprint("Waiting for {} seconds".format(self.cycle_speed))
+                    time.sleep(self.cycle_speed)
 
     def load_images_from_folder(self, folder_path):
         """Loads folder images."""
@@ -58,3 +105,8 @@ class Wallpaper(object):
                 print(traceback.format_exc())
         else:
             print("{} does not exist!".format(img_path))
+
+    def vprint(self, message):
+        """Prints out the message only if program is run in verbose mode."""
+        if self.verbose:
+            print(message)
