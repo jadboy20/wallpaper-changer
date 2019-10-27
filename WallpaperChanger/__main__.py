@@ -7,15 +7,15 @@ import logging.config
 from WallpaperChanger import __version__
 
 def main():
-    initialise_logging()
     args = parse_arguments()
+    initialise_logging(args)
     logging.info("Starting app.")
     app.App(args)
 
 
-def initialise_logging():
+def initialise_logging(args):
     logging.basicConfig(
-        filename='log.txt',
+        filename=args.log_directory if args.log_directory is not None else './log.txt',
         level=logging.DEBUG,
         format="[%(asctime)s]: %(message)s",
         datefmt="%Y-%d-%m %I:%M:%S %p"
@@ -29,6 +29,7 @@ def parse_arguments():
     parser.add_argument("-d", "--gallery-directory", help="Set the directory where the wallpapers reside.")
     parser.add_argument("-r", "--randomise", action="store_true", help="Displays the wallpapers in a random order.")
     parser.add_argument("-v", "--verbose", action="store_true")
+    parser.add_argument("--log-directory", help="Absolute file name of the log.")
     parser.add_argument("--version", action="store_true")
     parser.description = "A program that cycles through wallpapers for your desktop."
     args = parser.parse_args()
