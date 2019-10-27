@@ -10,6 +10,22 @@ This project can be split into parts:
 4. Change the background to cycle through a list of images from a website. Maybe a particular theme and pull the images off google.
 
 
+## Running the program
+
+To run the program, you must have python installed. This has been written for Python 3.6.4.
+
+To run the program, type in your command prompt
+
+```bat
+REM Use the argument --help to know how to use the program.
+
+REM If installed into site-packages
+start python -m WallpaperChanger --help
+
+REM If running from the project directory
+start python __main__.py --help
+```
+
 ## Maintaining
 
 When adding new modules downloaded by pip, be sure to update the `requirements.txt` file. To do this, use the following command.
