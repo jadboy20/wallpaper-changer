@@ -15,6 +15,7 @@ def parse_arguments():
     parser.add_argument("-d", "--gallery-directory", help="Set the directory where the wallpapers reside.")
     parser.add_argument("-r", "--randomise", action="store_true", help="Displays the wallpapers in a random order.")
     parser.add_argument("-v", "--verbose", action="store_true")
+    parser.add_argument("--load-config", help="Load previous configuration ")
     parser.add_argument("--version", action="store_true")
     parser.description = "A program that cycles through wallpapers for your desktop."
     args = parser.parse_args()
