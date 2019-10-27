@@ -4,6 +4,8 @@ import ctypes
 import traceback
 import time
 import random
+import logging
+
 
 VALID_PATH = "C:\\users\\james\\pictures"
 INVALID_PATH = "C:\\hello"
@@ -106,7 +108,12 @@ class Wallpaper(object):
         else:
             print("{} does not exist!".format(img_path))
 
-    def vprint(self, message):
-        """Prints out the message only if program is run in verbose mode."""
+    def vprint(self, message, level=logging.INFO):
+        """Prints out the message only if program is run in verbose mode.
+
+        Always prints to log.
+        """
         if self.verbose:
             print(message)
+
+        logging.log(level=level, msg="({}){}".format(logging.getLevelName(level), message))

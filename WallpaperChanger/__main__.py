@@ -2,11 +2,25 @@ import os
 import sys
 import WallpaperChanger.app as app
 import argparse
+import logging
+import logging.config
 from WallpaperChanger import __version__
 
 def main():
+    initialise_logging()
     args = parse_arguments()
+    logging.info("Starting app.")
     app.App(args)
+
+
+def initialise_logging():
+    logging.basicConfig(
+        filename='log.txt',
+        level=logging.DEBUG,
+        format="[%(asctime)s]: %(message)s",
+        datefmt="%Y-%d-%m %I:%M:%S %p"
+    )
+
 
 def parse_arguments():
     # Initialise the arguments.
