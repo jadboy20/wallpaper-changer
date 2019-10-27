@@ -14,12 +14,17 @@ def main():
 
 
 def initialise_logging(args):
-    logging.basicConfig(
-        filename=args.log_directory if args.log_directory is not None else './log.txt',
-        level=logging.DEBUG,
-        format="[%(asctime)s]: %(message)s",
-        datefmt="%Y-%d-%m %I:%M:%S %p"
-    )
+    try:
+        logging.basicConfig(
+            filename=args.log_directory if args.log_directory is not None else './log.txt',
+            level=logging.DEBUG,
+            format="[%(asctime)s]: %(message)s",
+            datefmt="%Y-%d-%m %I:%M:%S %p"
+        )
+    except PermissionError as e:
+        print("Do not have permission to create {}!".format(e.filename))
+        print("Exiting program!")
+        sys.exit(1)
 
 
 def parse_arguments():
