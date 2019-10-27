@@ -20,10 +20,10 @@ To run the program, type in your command prompt
 REM Use the argument --help to know how to use the program.
 
 REM If installed into site-packages
-python -m WallpaperChanger --help
+start python -m WallpaperChanger --help
 
 REM If running from the project directory
-python __main__.py --help
+start python __main__.py --help
 ```
 
 ## Maintaining
