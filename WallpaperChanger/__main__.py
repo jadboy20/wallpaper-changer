@@ -11,7 +11,13 @@ def main():
     initialise_logging(args)
     logging.info("")
     logging.info("App started!")
-    app.App(args)
+
+    try:
+        app.App(args)
+    except KeyboardInterrupt:
+        logging.info("Keyboard Interrupt! Exiting app...")
+
+    sys.exit(0)
 
 
 def initialise_logging(args):
