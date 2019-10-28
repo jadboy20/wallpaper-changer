@@ -75,7 +75,7 @@ class Wallpaper(object):
         # First check that file exists.
         if self._image_exists(img_path):
             try:
-                self.vprint("{} loaded.".format(img_path))
+                self.vprint("'{}' loaded.".format(img_path))
                 ctypes.windll.user32.SystemParametersInfoW(
                     SPI_SETDESKWALLPAPER, 0, img_path, 3)
             except Exception:
@@ -91,7 +91,7 @@ class Wallpaper(object):
         if self.verbose:
             print(message)
 
-        logging.log(level=level, msg="({}){}".format(logging.getLevelName(level), message))
+        logging.log(level=level, msg="{}".format(message))
 
     def run(self):
         if self.randomise:

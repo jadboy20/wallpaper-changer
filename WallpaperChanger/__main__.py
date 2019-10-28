@@ -19,7 +19,7 @@ def initialise_logging(args):
         logging.basicConfig(
             filename=args.log_directory if args.log_directory is not None else './wallpaper.log',
             level=logging.DEBUG,
-            format="[%(asctime)s]: %(message)s",
+            format="[%(asctime)s]<%(levelname)s>: %(message)s",
             datefmt="%Y-%d-%m %I:%M:%S %p"
         )
     except PermissionError as e:
