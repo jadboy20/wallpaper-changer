@@ -23,8 +23,8 @@ def initialise_logging(args):
             datefmt="%Y-%d-%m %I:%M:%S %p"
         )
     except PermissionError as e:
-        print("Do not have permission to create {}!".format(e.filename))
-        print("Exiting program!")
+        print("Do not have permission to create '{}'!".format(e.filename), file=sys.stderr)
+        print("Exiting program!", file=sys.stderr)
         sys.exit(1)
 
 
@@ -35,7 +35,7 @@ def parse_arguments():
     parser.add_argument("-d", "--gallery-directory", help="Set the directory where the wallpapers reside.")
     parser.add_argument("-r", "--randomise", action="store_true", help="Displays the wallpapers in a random order.")
     parser.add_argument("-v", "--verbose", action="store_true")
-    parser.add_argument("--log-directory", help="Absolute file name of the log.")
+    parser.add_argument("--log-directory", help="Creates and logs to log file provided here. Must contain absolute path.")
     parser.add_argument("--version", action="store_true")
     parser.description = "A program that cycles through wallpapers for your desktop."
     args = parser.parse_args()
