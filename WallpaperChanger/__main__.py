@@ -9,14 +9,15 @@ from WallpaperChanger import __version__
 def main():
     args = parse_arguments()
     initialise_logging(args)
-    logging.info("Starting app.")
+    logging.info("")
+    logging.info("App started!")
     app.App(args)
 
 
 def initialise_logging(args):
     try:
         logging.basicConfig(
-            filename=args.log_directory if args.log_directory is not None else './log.txt',
+            filename=args.log_directory if args.log_directory is not None else './wallpaper.log',
             level=logging.DEBUG,
             format="[%(asctime)s]: %(message)s",
             datefmt="%Y-%d-%m %I:%M:%S %p"

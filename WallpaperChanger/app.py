@@ -13,5 +13,6 @@ class App(object):
 
     def run(self):
         wp = wallpaper.Wallpaper(self.params)
+        wp.run()
 
 

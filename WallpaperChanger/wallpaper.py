@@ -19,7 +19,7 @@ class Wallpaper(object):
         self.verbose = params.verbose
         self.gallery_directory = params.gallery_directory
         self.randomise = params.randomise
-        random.seed()
+
 
         # Set cycle_speed from argument if available. Otherwise, set it to 5 seconds.
         if params.cycle_speed is None:
@@ -44,31 +44,6 @@ class Wallpaper(object):
         # Start program
         self.images = []
         self.load_images_from_folder(self.gallery_directory)
-
-        if self.randomise:
-            # Pick images out randomly, rather than in the order they are
-            # in the directory.
-            prev_num = -1
-
-            while True:
-                # Pick a number, any number!
-                rand_num = random.randint(0, len(self.images) - 1)
-                # Only pick number if its not the same as the last.
-                if prev_num != rand_num:
-                    # Possibly (but very unlikely) that will be out of range!
-                    try:
-                        self.loadImage(self.images[rand_num])
-                    except KeyError:
-                        self.vprint("Random number {} not in array range!".format(rand_num))
-
-                    time.sleep(self.cycle_speed)
-                    prev_num = rand_num
-        else:
-            while True:
-                for image in self.images:
-                    self.loadImage(image)
-                    self.vprint("Waiting for {} seconds".format(self.cycle_speed))
-                    time.sleep(self.cycle_speed)
 
     def load_images_from_folder(self, folder_path):
         """Loads folder images."""
@@ -100,13 +75,13 @@ class Wallpaper(object):
         # First check that file exists.
         if self._image_exists(img_path):
             try:
-                print("{} loaded.".format(img_path))
+                self.vprint("{} loaded.".format(img_path))
                 ctypes.windll.user32.SystemParametersInfoW(
                     SPI_SETDESKWALLPAPER, 0, img_path, 3)
             except Exception:
                 print(traceback.format_exc())
         else:
-            print("{} does not exist!".format(img_path))
+            self.vprint("{} does not exist!".format(img_path), level=logging.WARNING)
 
     def vprint(self, message, level=logging.INFO):
         """Prints out the message only if program is run in verbose mode.
@@ -117,3 +92,36 @@ class Wallpaper(object):
             print(message)
 
         logging.log(level=level, msg="({}){}".format(logging.getLevelName(level), message))
+
+    def run(self):
+        if self.randomise:
+            self.vprint("Random playback selected.")
+            # Seed a random selection.
+            random.seed()
+
+            # Pick images out randomly, rather than in the order they are
+            # in the directory.
+            prev_num = -1
+
+            while True:
+                # Pick a number, any number!
+                rand_num = random.randint(0, len(self.images) - 1)
+                # Only pick number if its not the same as the last.
+                # This will prevent similar images being displayed
+                # consecutively, thus giving the illusion of randomness.
+                if prev_num != rand_num:
+                    # Possibly (but very unlikely) that will be out of range!
+                    try:
+                        self.loadImage(self.images[rand_num])
+                    except IndexError:
+                        self.vprint("Random number {} not in array range!".format(rand_num), level=logging.WARNING)
+                    else:
+                        time.sleep(self.cycle_speed)
+                    prev_num = rand_num
+        else:
+            self.vprint("Standard playback selected.")
+            while True:
+                for image in self.images:
+                    self.loadImage(image)
+                    self.vprint("Waiting for {} seconds".format(self.cycle_speed))
+                    time.sleep(self.cycle_speed)
