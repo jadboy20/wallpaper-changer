@@ -4,6 +4,7 @@ import WallpaperChanger.app as app
 import argparse
 import logging
 import logging.config
+import traceback
 from WallpaperChanger import __version__
 
 def main():
@@ -16,6 +17,11 @@ def main():
         app.App(args)
     except KeyboardInterrupt:
         logging.info("Keyboard Interrupt! Exiting app...")
+    except Exception:
+        # I know this is not the best, but this is to catch any unknown
+        # exceptions that I may have not thought of and log them.
+        # Should help with debugging the code.
+        logging.error("Encountered Error! {}".format(traceback.format_exc()))
 
     sys.exit(0)
 
