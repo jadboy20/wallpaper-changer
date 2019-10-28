@@ -2,11 +2,31 @@ import os
 import sys
 import WallpaperChanger.app as app
 import argparse
+import logging
+import logging.config
 from WallpaperChanger import __version__
 
 def main():
     args = parse_arguments()
+    initialise_logging(args)
+    logging.info("")
+    logging.info("App started!")
     app.App(args)
+
+
+def initialise_logging(args):
+    try:
+        logging.basicConfig(
+            filename=args.log_directory if args.log_directory is not None else './wallpaper.log',
+            level=logging.DEBUG,
+            format="[%(asctime)s]<%(levelname)s>: %(message)s",
+            datefmt="%Y-%d-%m %I:%M:%S %p"
+        )
+    except PermissionError as e:
+        print("Do not have permission to create '{}'!".format(e.filename), file=sys.stderr)
+        print("Exiting program!", file=sys.stderr)
+        sys.exit(1)
+
 
 def parse_arguments():
     # Initialise the arguments.
@@ -15,6 +35,7 @@ def parse_arguments():
     parser.add_argument("-d", "--gallery-directory", help="Set the directory where the wallpapers reside.")
     parser.add_argument("-r", "--randomise", action="store_true", help="Displays the wallpapers in a random order.")
     parser.add_argument("-v", "--verbose", action="store_true")
+    parser.add_argument("--log-directory", help="Creates and logs to log file provided here. Must contain absolute path.")
     parser.add_argument("--version", action="store_true")
     parser.description = "A program that cycles through wallpapers for your desktop."
     args = parser.parse_args()
