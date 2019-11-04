@@ -8,6 +8,10 @@ import logging
 
 
 VALID_PATH = "C:\\users\\james\\pictures"
+
+# Alternate path naming.
+#VALID_PATH = r"C:\users\james\pictures"
+ 
 INVALID_PATH = "C:\\hello"
 
 DEFAULT_GALLERY = os.path.join("c:\\", "users", "james", "pictures")
