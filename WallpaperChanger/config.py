@@ -19,10 +19,29 @@ class Config(object):
             'randomise': 'False'
         }
 
-    def _get_cycle_speed(self):
-        """Return the cycle speed as an integer.
+    @property
+    def filename(self):
+        """Return the filename of the config file.
+        This getter checks that the filename exists as well.
+        """
+        return self._filename
 
-        If the property is unreadable, return -1
+    @filename.setter
+    def filename(self, val):
+        """Setter for the filename of the config file.
+
+        It will check if the directory is valid.
+        """
+        _FILENAME_DIR = os.path.dirname(val)
+        if os.path.isdir(_FILENAME_DIR):
+            self._filename = val
+        else:
+            raise EnvironmentError("Unable to find the directory '{}'".format(_FILENAME_DIR))
+
+
+    @property
+    def cycle_speed(self):
+        """Get cycle_speed property.
         """
         val = -1
         try:
@@ -33,12 +52,6 @@ class Config(object):
             logging.error("Config cycle-speed is not an integer.")
 
         return val
-
-    @property
-    def cycle_speed(self):
-        """Get cycle_speed property.
-        """
-        return self._get_cycle_speed()
 
     @cycle_speed.setter
     def cycle_speed(self, val):
@@ -84,7 +97,7 @@ class Config(object):
         wallpaper.log.
         """
         if os.path.isdir(val):
-            self._config['DEFAULT']['gallery-directory'] = val
+            self._config['DEFAULT']['log-directory'] = val
         else:
             raise EnvironmentError("'{}' is not a valid directory.".format(str(val)))
 
@@ -108,5 +121,17 @@ class Config(object):
             self._config['DEFAULT']['randomise'] = str(val)
 
     def save_config(self):
+        """Save the config to file.
+        """
         with open(self._filename, 'w') as configfile:
             self._config.write(configfile)
+
+    def load_config(self):
+        """Load the config from a file.
+        """
+        if os.path.exists(self.filename):
+            self._config.read(self.filename)
+        else:
+            raise EnvironmentError("Unable to find configuration file '{}'".format(self.filename))
+
+
