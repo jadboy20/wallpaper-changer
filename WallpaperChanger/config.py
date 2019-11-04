@@ -14,7 +14,7 @@ class Config(object):
         self._config = configparser.ConfigParser()
         self._config['DEFAULT'] = {
             'cycle-speed': '5',
-            'gallery-directory': '',
+            'gallery-directory': os.path.expanduser(r"~\pictures"),
             'log-directory': './wallpaper.log',
             'randomise': 'False'
         }
