@@ -15,7 +15,7 @@ class Config(object):
         self._config['DEFAULT'] = {
             'cycle-speed': '5',
             'gallery-directory': os.path.expanduser(r"~\pictures"),
-            'log-directory': './wallpaper.log',
+            'log-directory': os.path.expanduser(r"~\wallpaper.log"),
             'randomise': 'False'
         }
 
