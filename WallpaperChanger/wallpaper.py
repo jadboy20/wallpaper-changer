@@ -5,7 +5,7 @@ import traceback
 import time
 import random
 import logging
-from WallpaperChanger import config
+from . import config
 
 VALID_PATH = "C:\\users\\james\\pictures"
 INVALID_PATH = "C:\\hello"

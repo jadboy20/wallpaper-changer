@@ -1,6 +1,6 @@
 import os
 import sys
-import WallpaperChanger.wallpaper as wallpaper
+from . import wallpaper
 import argparse
 
 

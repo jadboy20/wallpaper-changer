@@ -1,11 +1,11 @@
 import os
 import sys
-import WallpaperChanger.app as app
 import argparse
 import logging
 import logging.config
 import traceback
-from WallpaperChanger import __version__
+from . import app
+from . import __version__
 
 def main():
     args = parse_arguments()
