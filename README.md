@@ -37,3 +37,7 @@ pip freeze &> requirements.txt
 # To load dependencies
 pip install -R requirements.txt
 ```
+
+## Running pytest
+
+See [this](https://docs.pytest.org/en/latest/getting-started.html) tutorial for running pytest.
