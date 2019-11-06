@@ -62,3 +62,14 @@ See [this](http://doc.pytest.org/en/latest/goodpractices.html) for good practice
 
 **pytest** will search for test files that start with `test_*.py` or `*_test.py`.
 
+Since this is a relatively small module, we will keep all tests in the same directory. The naming convention will be:
+
+```
+test_<module_name>.py
+
+eg:
+test_wallpaper.py
+```
+
+Each module should have its own test.
+
