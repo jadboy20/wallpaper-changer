@@ -31,6 +31,9 @@ start python __main__.py --help
 When adding new modules downloaded by pip, be sure to update the `requirements.txt` file. To do this, use the following command.
 
 ```bash
+# Make sure you activate your virtual environment.
+source ./venv/Scripts/activate
+
 # To save dependencies
 pip freeze &> requirements.txt
 
@@ -38,14 +41,24 @@ pip freeze &> requirements.txt
 pip install -R requirements.txt
 ```
 
-## Running pytest
+## Installing editable WallpaperChanger module.
+
+This is handy if you want to run the WallpaperChanger module outside of the `./src` directory. It also makes importing the WallpaperChanger module from within the test modules easier. This all assumes that you have your virtual environment setup!
+
+After loading your dependencies, you will want to install an editable package of the Wallpaper Changer. This can be done by running the following command within the `./src` directory.
+
+```bash
+pip install -e .
+```
+
+## Setting up pytest
 
 See [this](https://docs.pytest.org/en/latest/getting-started.html) tutorial for running pytest.
 
 See [this](http://doc.pytest.org/en/latest/goodpractices.html) for good practices.
 
+
 ### Naming Tests
 
 **pytest** will search for test files that start with `test_*.py` or `*_test.py`.
-
 
