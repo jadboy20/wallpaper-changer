@@ -51,7 +51,7 @@ class Wallpaper(object):
 
         try:
             img_list = os.listdir(folder_path)
-        except FileNotFoundError:
+        except EnvironmentError:
             print("Can't find directory {}".format(folder_path))
         else:
             self.images = [os.path.join(folder_path, image) for image in img_list if self.is_valid_image_format(image)]
