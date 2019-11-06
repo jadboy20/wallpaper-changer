@@ -41,3 +41,11 @@ pip install -R requirements.txt
 ## Running pytest
 
 See [this](https://docs.pytest.org/en/latest/getting-started.html) tutorial for running pytest.
+
+See [this](http://doc.pytest.org/en/latest/goodpractices.html) for good practices.
+
+### Naming Tests
+
+**pytest** will search for test files that start with `test_*.py` or `*_test.py`.
+
+
