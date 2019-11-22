@@ -5,7 +5,7 @@ import traceback
 import time
 import random
 import logging
-
+from . import config
 
 VALID_PATH = "C:\\users\\james\\pictures"
 INVALID_PATH = "C:\\hello"
@@ -19,12 +19,28 @@ class Wallpaper(object):
         self.verbose = params.verbose
         self.gallery_directory = params.gallery_directory
         self.randomise = params.randomise
+        self.config = config.Config()
 
+        # Load the config file.
+        if params.configuration_path is None:
+            # Load the config file from the filename "./wallpaper.conf"
+            try:
+                self.config.filename = r".\wallpaper.conf"
+                self.config.load_config()
+
+                # Copy over the parameters from the config to the class
+                # members
+                self.randomise = self.config.randomise
+                self.gallery_directory = self.config.gallery_directory
+
+            except EnvironmentError as e:
+                logging.warning("{}. Creating a default configuration file at '{}'".format(str(e), self.config.filename))
+                self.config.save_config()
 
         # Set cycle_speed from argument if available. Otherwise, set it to 5 seconds.
         if params.cycle_speed is None:
-            self.vprint("Cycle speed not defined. Setting to 5 seconds.")
-            self.cycle_speed = 5
+            self.vprint("Cycle speed not defined. Setting to 5 seconds.", level=logging.WARNING)
+            self.cycle_speed = self.config.cycle_speed
         else:
             try:
                 self.cycle_speed = int(params.cycle_speed)
@@ -33,12 +49,12 @@ class Wallpaper(object):
 
         # Default gallery directory to C:/users/user/pictures if no parameter is given.
         if self.gallery_directory is None:
-            self.vprint("Gallery directory not defined. Setting gallery directory to '{}' ".format(DEFAULT_GALLERY))
-            self.gallery_directory = DEFAULT_GALLERY
+            self.vprint("Gallery directory not defined. Setting gallery directory to '{}' ".format(DEFAULT_GALLERY), level=logging.WARNING)
+            self.gallery_directory = self.config.gallery_directory
 
         # Check if directory exists.
-        if not os.path.exists(self.gallery_directory):
-            self.vprint("Could not find {}\nExiting program!".format(self.gallery_directory))
+        if not os.path.isdir(self.gallery_directory):
+            self.vprint("Could not find '{}'! Check the gallery directory. Exiting program!".format(self.gallery_directory), level=logging.WARNING)
             sys.exit(1)
 
         # Start program

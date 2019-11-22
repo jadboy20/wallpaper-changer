@@ -1,11 +1,11 @@
 import os
 import sys
-import WallpaperChanger.app as app
 import argparse
 import logging
 import logging.config
 import traceback
-from WallpaperChanger import __version__
+from . import app
+from . import __version__
 
 def main():
     args = parse_arguments()
@@ -48,6 +48,7 @@ def parse_arguments():
     parser.add_argument("-r", "--randomise", action="store_true", help="Displays the wallpapers in a random order.")
     parser.add_argument("-v", "--verbose", action="store_true")
     parser.add_argument("--log-directory", help="Creates and logs to log file provided here. Must contain absolute path.")
+    parser.add_argument("--configuration-path", help="Where to load the configuration file from.")
     parser.add_argument("--version", action="store_true")
     parser.description = "A program that cycles through wallpapers for your desktop."
     args = parser.parse_args()

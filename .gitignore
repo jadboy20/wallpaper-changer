@@ -4,3 +4,5 @@ __pycache__/
 Images/
 *.log
 *.txt
+*.conf
+*.pyc
