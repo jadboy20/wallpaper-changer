@@ -27,7 +27,12 @@ class Wallpaper(object):
             try:
                 self.config.filename = r".\wallpaper.conf"
                 self.config.load_config()
+
+                # Copy over the parameters from the config to the class
+                # members
                 self.randomise = self.config.randomise
+                self.gallery_directory = self.config.gallery_directory
+
             except EnvironmentError as e:
                 logging.warning("{}. Creating a default configuration file at '{}'".format(str(e), self.config.filename))
                 self.config.save_config()
@@ -48,8 +53,8 @@ class Wallpaper(object):
             self.gallery_directory = self.config.gallery_directory
 
         # Check if directory exists.
-        if not os.path.exists(self.gallery_directory):
-            self.vprint("Could not find '{}'! Check the configuration file. Exiting program!".format(self.gallery_directory), level=logging.WARNING)
+        if not os.path.isdir(self.gallery_directory):
+            self.vprint("Could not find '{}'! Check the gallery directory. Exiting program!".format(self.gallery_directory), level=logging.WARNING)
             sys.exit(1)
 
         # Start program
