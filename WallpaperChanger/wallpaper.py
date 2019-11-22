@@ -34,7 +34,7 @@ class Wallpaper(object):
 
         # Set cycle_speed from argument if available. Otherwise, set it to 5 seconds.
         if params.cycle_speed is None:
-            self.vprint("Cycle speed not defined. Setting to 5 seconds.")
+            self.vprint("Cycle speed not defined. Setting to 5 seconds.", level=logging.WARNING)
             self.cycle_speed = self.config.cycle_speed
         else:
             try:
@@ -44,12 +44,12 @@ class Wallpaper(object):
 
         # Default gallery directory to C:/users/user/pictures if no parameter is given.
         if self.gallery_directory is None:
-            self.vprint("Gallery directory not defined. Setting gallery directory to '{}' ".format(DEFAULT_GALLERY))
+            self.vprint("Gallery directory not defined. Setting gallery directory to '{}' ".format(DEFAULT_GALLERY), level=logging.WARNING)
             self.gallery_directory = self.config.gallery_directory
 
         # Check if directory exists.
         if not os.path.exists(self.gallery_directory):
-            self.vprint("Could not find '{}'! Check the configuration file. Exiting program!".format(self.gallery_directory))
+            self.vprint("Could not find '{}'! Check the configuration file. Exiting program!".format(self.gallery_directory), level=logging.WARNING)
             sys.exit(1)
 
         # Start program

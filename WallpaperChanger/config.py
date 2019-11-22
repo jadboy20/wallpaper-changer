@@ -3,6 +3,8 @@ import os
 import configparser
 import logging
 
+from .error import *
+
 _MAX_CYCLE_SPEED = 3600
 _MIN_CYCLE_SPEED = 5
 class Config(object):
@@ -12,6 +14,11 @@ class Config(object):
     def __init__(self):
         self._filename = "./wallpaper.conf"
         self._config = configparser.ConfigParser()
+        self.reset_config()
+
+    def reset_config(self):
+        """Reset config back to default value.
+        """
         self._config['DEFAULT'] = {
             'cycle-speed': '5',
             'gallery-directory': os.path.expanduser(r"~\pictures"),
@@ -57,7 +64,10 @@ class Config(object):
     def cycle_speed(self, val):
         """Get cycle speed
 
-        return: -1 if not valid integer.
+        Raises
+        ========
+            `ValueError` if set value is outside of range.
+            `TypeError` if set value is not a valid int.
         """
         # Check if val is valid integer.
         if type(val) is int:
@@ -77,6 +87,10 @@ class Config(object):
     @gallery_directory.setter
     def gallery_directory(self, val):
         """Set the gallery directory.
+
+        Raises
+        ========
+            `EnvironmentError` if the gallery directory could not be found.
         """
         if os.path.exists(str(val)) and os.path.isdir(str(val)):
             self._config['DEFAULT']['gallery-directory'] = val
@@ -95,6 +109,10 @@ class Config(object):
         """Set the log directory.
         This is the directory the log is stored. Log will always be
         wallpaper.log.
+
+        Raises
+        ========
+            `EnvironmentError` if log directory does not exist.
         """
         if os.path.isdir(val):
             self._config['DEFAULT']['log-directory'] = val
@@ -104,12 +122,20 @@ class Config(object):
     @property
     def randomise(self):
         """Get the randomise option.
+
+        Raises
+        ========
+            `ConfigureFileOptionError` if unable to read a valid boolean from randomise option.
         """
         val = self._config['DEFAULT']['randomise']
         if (val == "False") or (val == "false"):
             val = False
         elif (val == "True") or (val == "true"):
             val = True
+        else:
+            # This shouldn't happen. Maybe raise a configuration
+            # error.
+            raise ConfigurationFileOptionError("Unable to read {} from option randomise.".format(val))
 
         return val
 
@@ -128,6 +154,10 @@ class Config(object):
 
     def load_config(self):
         """Load the config from a file.
+
+        Raises
+        ========
+            `EnvironmentError` if unable to find the configuration file.
         """
         if os.path.exists(self.filename):
             self._config.read(self.filename)
