@@ -27,6 +27,7 @@ class App(QWidget):
         self.width = 640
         self.height = 480
         self.config = config.Config()
+        print(str(self.config))
 
         self.form = {}
         self.initUI()
@@ -174,4 +175,4 @@ class App(QWidget):
 
         :return:
         """
-        pass
+        print(str(self.config))

@@ -2,6 +2,8 @@ import sys
 import os
 import configparser
 import logging
+import tempfile
+import time
 
 from .error import *
 
@@ -163,3 +165,19 @@ class Config(object):
             self._config.read(self.filename)
         else:
             raise EnvironmentError("Unable to find configuration file '{}'".format(self.filename))
+
+    def __str__(self):
+        """Convert config to string. Maintains format.
+
+        :return:    Config as a string.
+        """
+        path = ""
+        with tempfile.NamedTemporaryFile(mode='w+') as tf:
+            path = tf.name
+            print(path)
+            self._config.write(tf)
+            time.sleep(1)
+            string = '\n'.join(tf.readlines())
+            print(string)
+
+        return ""
