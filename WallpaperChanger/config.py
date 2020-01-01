@@ -71,7 +71,7 @@ class Config(object):
         """
         # Check if val is valid integer.
         if type(val) is int:
-            if (val >= 0) and (val <= _MAX_CYCLE_SPEED):
+            if (val >= _MIN_CYCLE_SPEED) and (val <= _MAX_CYCLE_SPEED):
                 self._config['DEFAULT']['cycle-speed'] = str(val)
             else:
                 raise ValueError("'cycle-speed' must be between 5 and {}".format(_MAX_CYCLE_SPEED))
@@ -163,5 +163,3 @@ class Config(object):
             self._config.read(self.filename)
         else:
             raise EnvironmentError("Unable to find configuration file '{}'".format(self.filename))
-
-
