@@ -1,11 +1,25 @@
 astroid==2.3.2
+atomicwrites==1.3.0
+attrs==19.3.0
 autopep8==1.4.4
 colorama==0.4.1
+importlib-metadata==0.23
 isort==4.3.21
 lazy-object-proxy==1.4.2
 mccabe==0.6.1
+more-itertools==7.2.0
+packaging==19.2
+pluggy==0.13.0
+py==1.8.0
 pycodestyle==2.5.0
 pylint==2.4.3
+pyparsing==2.4.4
+PyQt5==5.14.0
+PyQt5-sip==12.7.0
+pytest==5.2.2
 six==1.12.0
 typed-ast==1.4.0
+-e git+https://github.com/jadboy20/wallpaper-changer.git@66035058a86e5ec61b8a0de6824db0076c5f462e#egg=WallpaperChanger
+wcwidth==0.1.7
 wrapt==1.11.2
+zipp==0.6.0
