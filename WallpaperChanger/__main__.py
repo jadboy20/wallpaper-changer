@@ -6,14 +6,17 @@ import logging.config
 import traceback
 from . import app
 from . import __version__
+from . import gui
 
 def main():
     args = parse_arguments()
     initialise_logging(args)
     logging.info("")
     logging.info("App started!")
+
     if args.gui_mode:
         print("Going into gui mode!")
+        gui.Gui().run()
         sys.exit()
 
     try:
