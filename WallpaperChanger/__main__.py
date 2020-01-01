@@ -12,6 +12,9 @@ def main():
     initialise_logging(args)
     logging.info("")
     logging.info("App started!")
+    if args.gui_mode:
+        print("Going into gui mode!")
+        sys.exit()
 
     try:
         app.App(args)
@@ -50,6 +53,7 @@ def parse_arguments():
     parser.add_argument("--log-directory", help="Creates and logs to log file provided here. Must contain absolute path.")
     parser.add_argument("--configuration-path", help="Where to load the configuration file from.")
     parser.add_argument("--version", action="store_true")
+    parser.add_argument("--gui-mode", action="store_true", help="Runs the gui with wallpaper in the background.")
     parser.description = "A program that cycles through wallpapers for your desktop."
     args = parser.parse_args()
 
