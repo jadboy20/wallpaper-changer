@@ -6,3 +6,4 @@ Images/
 *.txt
 *.conf
 *.pyc
+.idea
