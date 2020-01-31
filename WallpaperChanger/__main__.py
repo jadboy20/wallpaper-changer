@@ -6,13 +6,17 @@ import logging.config
 import traceback
 from . import app
 from . import __version__
+from . import scraper
+
+
 
 def main():
     args = parse_arguments()
     initialise_logging(args)
     logging.info("")
     logging.info("App started!")
-
+    s = scraper.scraper.HipWallpaperScraper()
+    s.search("Halo reach")
     try:
         app.App(args)
     except KeyboardInterrupt:
