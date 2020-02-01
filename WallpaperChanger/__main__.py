@@ -15,8 +15,7 @@ def main():
     initialise_logging(args)
     logging.info("")
     logging.info("App started!")
-    s = scraper.scraper.HipWallpaperScraper()
-    s.search("Halo reach")
+
     try:
         app.App(args)
     except KeyboardInterrupt:

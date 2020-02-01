@@ -1,3 +1,4 @@
+import os
 import sys
 import requests
 from urllib import parse
@@ -11,7 +12,7 @@ from lxml import html
 class Scraper(object):
     def __init__(self, hostname):
         self.hostname = hostname
-
+        self.results = []
     def search(self, query, num_results=10):
         """Use this funtion to return a list of links to images.
 
@@ -52,9 +53,9 @@ class HipWallpaperScraper(Scraper):
             if req.status_code != 200:
                 logging.warn("{} - {}".format(self.get_search_url(sanitised_query), req.status_code))
                 return []
-        except Exception:
+        except requests.exceptions.ConnectionError as e:
             # TODO: Fix this up and use a proper exception relating to the request module.
-            logging.error("Something went wrong")
+            logging.error("{}".format(str(e)))
         else:
             # First we need to get the categories since this website returns categories first.
             tree = html.fromstring(req.content)
@@ -70,21 +71,28 @@ class HipWallpaperScraper(Scraper):
                 req = requests.get(url)
                 tree = html.fromstring(req.content)
                 images = tree.xpath('//a[@class="btn btn-primary"]/@href')
-                num_pictures += len(images)
-                logging.info("{} has {} images".format(url, len(images)))
-                if num_pictures > num_results:
-                    logging.info("Taking images [0:{}]".format(num_pictures - num_results))
-                    # We need to take what we can from the pictures then get out of the loop
-                    images_to_return += images[0:(num_pictures - num_results)]
+
+                images_to_return += images
+                if len(images_to_return) > num_results:
+                    images_to_return = images_to_return[:(num_results)]
                     break
-                else:
-                    images_to_return += images
 
+            logging.info("Successfully got {} images!".format(len(images_to_return)))
 
-            logging.info("Got {} images!".format(len(images_to_return)))
+            return images_to_return
 
             # TODO: What to do when there are no categories?
 
+
+    def write_images_to_file(self, results, path):
+
+        if os.path.isdir(os.path.dirname(path)) is False:
+            logging.info("Making directory {}".format(os.path.dirname(path)))
+            os.mkdir(os.path.dirname(path))
+
+        with open(path, 'w') as f:
+            for url in results:
+                f.write(url + "\n")
 
 
     def get_search_url(self, query):
