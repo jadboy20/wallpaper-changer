@@ -128,17 +128,7 @@ class Config(object):
         ========
             `ConfigureFileOptionError` if unable to read a valid boolean from randomise option.
         """
-        val = self._config['DEFAULT']['randomise']
-        if (val == "False") or (val == "false"):
-            val = False
-        elif (val == "True") or (val == "true"):
-            val = True
-        else:
-            # This shouldn't happen. Maybe raise a configuration
-            # error.
-            raise ConfigurationFileOptionError("Unable to read {} from option randomise.".format(val))
-
-        return val
+        return tobool(self._config['DEFAULT']['randomise'])
 
     @randomise.setter
     def randomise(self, val):
@@ -146,6 +136,21 @@ class Config(object):
         """
         if type(val) is bool:
             self._config['DEFAULT']['randomise'] = str(val)
+
+    @property
+    def online_mode(self):
+        """Return whether online mode is enabled.
+
+        Raises
+        ========
+            `ConfigureFileOptionError` if unable to read a valid boolean from randomise option.
+        """
+        return tobool(self._config['DEFAULT']['online-mode'])
+
+    @online_mode.setter
+    def online_mode(self, val):
+        if type(val) is bool:
+            self._config['DEFAULT']['online-mode'] = str(val)
 
     def save_config(self):
         """Save the config to file.
@@ -164,5 +169,18 @@ class Config(object):
             self._config.read(self.filename)
         else:
             raise EnvironmentError("Unable to find configuration file '{}'".format(self.filename))
+
+
+def tobool(val):
+    if (val == "False") or (val == "false"):
+        val = False
+    elif (val == "True") or (val == "true"):
+        val = True
+    else:
+        # This shouldn't happen. Maybe raise a configuration
+        # error.
+        raise ConfigurationFileOptionError("Unable to read {} from option randomise.".format(val))
+
+    return val
 
 
