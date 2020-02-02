@@ -24,7 +24,8 @@ class Config(object):
             'gallery-directory': os.path.expanduser(r"~\pictures"),
             'log-directory': os.path.expanduser(r"~\wallpaper.log"),
             'randomise': 'False',
-            'online-mode': 'False'
+            'online-mode': 'False',
+            'query': 'Halo'
         }
 
     @property
@@ -151,6 +152,14 @@ class Config(object):
     def online_mode(self, val):
         if type(val) is bool:
             self._config['DEFAULT']['online-mode'] = str(val)
+
+    @property
+    def query(self):
+        return str(self._config['DEFAULT']['query'])
+
+    @query.setter
+    def query(self, val):
+        self._config['DEFAULT']['query'] = str(val)
 
     def save_config(self):
         """Save the config to file.

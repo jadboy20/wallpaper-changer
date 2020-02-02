@@ -35,6 +35,7 @@ class Wallpaper(object):
                 self.randomise = self.config.randomise
                 self.gallery_directory = self.config.gallery_directory
                 self.online_mode = self.config.online_mode
+                self.query = self.config.query
 
             except EnvironmentError as e:
                 logging.warning("{}. Creating a default configuration file at '{}'".format(str(e), self.config.filename))
@@ -67,7 +68,7 @@ class Wallpaper(object):
 
             # Get the images from online first and store them to the cache
             s = scraper.scraper.HipWallpaperScraper()
-            results = s.search("Halo reach", num_results=10)
+            results = s.search(self.query, num_results=10)
             s.write_images_to_file(results, WALLPAPER_DEFAULT_CACHE)
 
             # Start downloading images from the cache.
