@@ -92,3 +92,21 @@ class HipWallpaperScraper(Scraper):
 
     def get_search_url(self, query):
         return self.hostname + "/search?q=" + query
+
+    def download_images(self, cache_path, directory):
+        # Start by reading the cache and pulling the images from there.
+        with open(cache_path, 'r') as f:
+            cache = f.readlines()
+
+        for link in cache:
+            link = link.strip("\n")
+            # Download image and store it in the appropriate filename
+            filename = os.path.basename(link).strip("\n")
+            IMAGE_PATH = os.path.join(directory, filename)
+            logging.info("Downloading '{}'. Saving to {}.".format(link, IMAGE_PATH))
+            req = requests.get(link)
+            if req.status_code != 200:
+                logging.warning("{} code returned!".format(req.status_code))
+            with open(IMAGE_PATH, 'wb') as f:
+                f.write(req.content)
+

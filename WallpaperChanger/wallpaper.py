@@ -6,6 +6,8 @@ import time
 import random
 import logging
 from . import config
+from . import WALLPAPER_DEFAULT_DIR, WALLPAPER_DEFAULT_CACHE
+from . import scraper
 
 VALID_PATH = "C:\\users\\james\\pictures"
 INVALID_PATH = "C:\\hello"
@@ -32,6 +34,7 @@ class Wallpaper(object):
                 # members
                 self.randomise = self.config.randomise
                 self.gallery_directory = self.config.gallery_directory
+                self.online_mode = self.config.online_mode
 
             except EnvironmentError as e:
                 logging.warning("{}. Creating a default configuration file at '{}'".format(str(e), self.config.filename))
@@ -56,6 +59,19 @@ class Wallpaper(object):
         if not os.path.isdir(self.gallery_directory):
             self.vprint("Could not find '{}'! Check the gallery directory. Exiting program!".format(self.gallery_directory), level=logging.WARNING)
             sys.exit(1)
+
+        # Check if in online mode. This will use images obtain from online rather than images in custom gallery.
+        if self.online_mode:
+            self.vprint("Online mode has been enabled. Online images will be stored in {}".format(WALLPAPER_DEFAULT_DIR))
+            self.gallery_directory = WALLPAPER_DEFAULT_DIR
+
+            # Get the images from online first and store them to the cache
+            s = scraper.scraper.HipWallpaperScraper()
+            results = s.search("Halo reach", num_results=10)
+            s.write_images_to_file(results, WALLPAPER_DEFAULT_CACHE)
+
+            # Start downloading images from the cache.
+            s.download_images(WALLPAPER_DEFAULT_CACHE, WALLPAPER_DEFAULT_DIR)
 
         # Start program
         self.images = []

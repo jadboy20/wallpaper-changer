@@ -22,10 +22,6 @@ class App(object):
             os.mkdir(directory)
 
     def run(self):
-        s = scraper.scraper.HipWallpaperScraper()
-        results = s.search("Halo reach", num_results=50)
-        s.write_images_to_file(results, WALLPAPER_DEFAULT_CACHE)
-
         wp = wallpaper.Wallpaper(self.params)
         wp.run()
 
