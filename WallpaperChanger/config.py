@@ -23,7 +23,8 @@ class Config(object):
             'cycle-speed': '5',
             'gallery-directory': os.path.expanduser(r"~\pictures"),
             'log-directory': os.path.expanduser(r"~\wallpaper.log"),
-            'randomise': 'False'
+            'randomise': 'False',
+            'online-mode': 'False'
         }
 
     @property

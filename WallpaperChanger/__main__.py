@@ -53,6 +53,7 @@ def parse_arguments():
     parser.add_argument("--log-directory", help="Creates and logs to log file provided here. Must contain absolute path.")
     parser.add_argument("--configuration-path", help="Where to load the configuration file from.")
     parser.add_argument("--version", action="store_true")
+    parser.add_argument("-o", "--online-mode", action="store_true", help="Displays images from the web based off themes in the config.")
     parser.description = "A program that cycles through wallpapers for your desktop."
     args = parser.parse_args()
 
