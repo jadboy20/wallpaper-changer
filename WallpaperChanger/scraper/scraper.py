@@ -63,7 +63,6 @@ class HipWallpaperScraper(Scraper):
             links = tree.xpath('//div[@class="row"]/a/@href')           # These are the path to the next page. These need to be appended to the hostname
             titles = tree.xpath('//span[@class="card-title"]/text()')   # These are the titles of each page. This can be considered the categories.
 
-
             num_pictures = 0
             images_to_return = []
             for link in links:
@@ -81,9 +80,6 @@ class HipWallpaperScraper(Scraper):
 
             return images_to_return
 
-            # TODO: What to do when there are no categories?
-
-
     def write_images_to_file(self, results, path):
 
         if os.path.isdir(os.path.dirname(path)) is False:
@@ -93,7 +89,6 @@ class HipWallpaperScraper(Scraper):
         with open(path, 'w') as f:
             for url in results:
                 f.write(url + "\n")
-
 
     def get_search_url(self, query):
         return self.hostname + "/search?q=" + query
