@@ -7,10 +7,13 @@ from .error import *
 
 _MAX_CYCLE_SPEED = 3600
 _MIN_CYCLE_SPEED = 5
+
+
 class Config(object):
     """
     Configuration object for wall paper.
     """
+
     def __init__(self):
         self._filename = "./wallpaper.conf"
         self._config = configparser.ConfigParser()
@@ -23,7 +26,10 @@ class Config(object):
             'cycle-speed': '5',
             'gallery-directory': os.path.expanduser(r"~\pictures"),
             'log-directory': os.path.expanduser(r"~\wallpaper.log"),
-            'randomise': 'False'
+            'randomise': 'False',
+            'online-mode': 'False',
+            'query': 'Halo',
+            'download-cap': 10
         }
 
     @property
@@ -43,8 +49,8 @@ class Config(object):
         if os.path.isdir(_FILENAME_DIR):
             self._filename = val
         else:
-            raise EnvironmentError("Unable to find the directory '{}'".format(_FILENAME_DIR))
-
+            raise EnvironmentError(
+                "Unable to find the directory '{}'".format(_FILENAME_DIR))
 
     @property
     def cycle_speed(self):
@@ -74,9 +80,11 @@ class Config(object):
             if (val >= 0) and (val <= _MAX_CYCLE_SPEED):
                 self._config['DEFAULT']['cycle-speed'] = str(val)
             else:
-                raise ValueError("'cycle-speed' must be between 5 and {}".format(_MAX_CYCLE_SPEED))
+                raise ValueError(
+                    "'cycle-speed' must be between 5 and {}".format(_MAX_CYCLE_SPEED))
         else:
-            raise ValueError("'cycle-speed' must be of type '{}' not '{}'".format(str(int), type(val)))
+            raise ValueError(
+                "'cycle-speed' must be of type '{}' not '{}'".format(str(int), type(val)))
 
     @property
     def gallery_directory(self):
@@ -95,7 +103,8 @@ class Config(object):
         if os.path.exists(str(val)) and os.path.isdir(str(val)):
             self._config['DEFAULT']['gallery-directory'] = val
         else:
-            raise EnvironmentError("'{}' is not a valid directory.".format(str(val)))
+            raise EnvironmentError(
+                "'{}' is not a valid directory.".format(str(val)))
 
     @property
     def log_directory(self):
@@ -117,7 +126,8 @@ class Config(object):
         if os.path.isdir(val):
             self._config['DEFAULT']['log-directory'] = val
         else:
-            raise EnvironmentError("'{}' is not a valid directory.".format(str(val)))
+            raise EnvironmentError(
+                "'{}' is not a valid directory.".format(str(val)))
 
     @property
     def randomise(self):
@@ -127,17 +137,7 @@ class Config(object):
         ========
             `ConfigureFileOptionError` if unable to read a valid boolean from randomise option.
         """
-        val = self._config['DEFAULT']['randomise']
-        if (val == "False") or (val == "false"):
-            val = False
-        elif (val == "True") or (val == "true"):
-            val = True
-        else:
-            # This shouldn't happen. Maybe raise a configuration
-            # error.
-            raise ConfigurationFileOptionError("Unable to read {} from option randomise.".format(val))
-
-        return val
+        return tobool(self._config['DEFAULT']['randomise'])
 
     @randomise.setter
     def randomise(self, val):
@@ -145,6 +145,41 @@ class Config(object):
         """
         if type(val) is bool:
             self._config['DEFAULT']['randomise'] = str(val)
+
+    @property
+    def online_mode(self):
+        """Return whether online mode is enabled.
+
+        Raises
+        ========
+            `ConfigureFileOptionError` if unable to read a valid boolean from randomise option.
+        """
+        return tobool(self._config['DEFAULT']['online-mode'])
+
+    @online_mode.setter
+    def online_mode(self, val):
+        if type(val) is bool:
+            self._config['DEFAULT']['online-mode'] = str(val)
+
+    @property
+    def query(self):
+        return str(self._config['DEFAULT']['query'])
+
+    @query.setter
+    def query(self, val):
+        self._config['DEFAULT']['query'] = str(val)
+
+    @property
+    def download_cap(self):
+        """Getter for the maximum number of images to download. Will not download any more than this amount."""
+        return int(self._config['DEFAULT']['download-cap'])
+
+    @download_cap.setter
+    def download_cap(self, val):
+        if type(val) is not int:
+            raise ValueError("'download_cap' must be a of type 'int'")
+
+        self._config['DEFAULT']['download-cap'] = val
 
     def save_config(self):
         """Save the config to file.
@@ -162,6 +197,19 @@ class Config(object):
         if os.path.exists(self.filename):
             self._config.read(self.filename)
         else:
-            raise EnvironmentError("Unable to find configuration file '{}'".format(self.filename))
+            raise EnvironmentError(
+                "Unable to find configuration file '{}'".format(self.filename))
 
 
+def tobool(val):
+    if (val == "False") or (val == "false"):
+        val = False
+    elif (val == "True") or (val == "true"):
+        val = True
+    else:
+        # This shouldn't happen. Maybe raise a configuration
+        # error.
+        raise ConfigurationFileOptionError(
+            "Unable to read {} from option randomise.".format(val))
+
+    return val
