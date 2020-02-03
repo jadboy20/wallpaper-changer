@@ -4,9 +4,28 @@
 
 set -e
 
-# Enter the virtual environment
-source venv/Scripts/activate
+case "$1" in
+    "clean")
+        echo Cleaning build artefacts.
+        echo Removing build/
+        echo Removing dist/
+        rm -r build
+        rm -r dist
+        ;;
 
-pip install -r requirements.txt
+    "build")
+        echo Building project
+        # Enter the virtual environment
+        source venv/Scripts/activate
 
-pyinstaller --onefile changer.py
+        pip install -r requirements.txt
+
+        pyinstaller --onefile changer.py
+        ;;
+
+    *)
+        echo Unknown command.
+        echo "usage: $0 (build|clean)"
+        ;;
+
+esac
