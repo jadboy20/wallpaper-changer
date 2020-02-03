@@ -6,3 +6,11 @@ Images/
 *.txt
 *.conf
 *.pyc
+.venv/
+.venvwallpaper/
+WallpaperChanger/dist/
+WallpaperChanger/build/
+build/
+dist/
+output/
+changer.spec

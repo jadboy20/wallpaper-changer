@@ -37,3 +37,17 @@ pip freeze &> requirements.txt
 # To load dependencies
 pip install -R requirements.txt
 ```
+
+## Building the project
+
+To build the project you will need bash for **Windows**.
+
+To build, run the following.
+
+```bash
+# To build project
+./build.sh build
+
+# To clean project
+./build.sh clean
+```
