@@ -7,7 +7,7 @@ import random
 import logging
 from . import config
 from . import WALLPAPER_DEFAULT_DIR, WALLPAPER_DEFAULT_CACHE
-from . import scraper
+from .scraper import scraper
 
 VALID_PATH = "C:\\users\\james\\pictures"
 INVALID_PATH = "C:\\hello"
@@ -36,6 +36,7 @@ class Wallpaper(object):
                 self.gallery_directory = self.config.gallery_directory
                 self.online_mode = self.config.online_mode
                 self.query = self.config.query
+                self.download_cap = self.config.download_cap
 
             except EnvironmentError as e:
                 logging.warning("{}. Creating a default configuration file at '{}'".format(str(e), self.config.filename))
@@ -67,8 +68,8 @@ class Wallpaper(object):
             self.gallery_directory = WALLPAPER_DEFAULT_DIR
 
             # Get the images from online first and store them to the cache
-            s = scraper.scraper.HipWallpaperScraper()
-            results = s.search(self.query, num_results=10)
+            s = scraper.HipWallpaperScraper()
+            results = s.search(self.query, num_results=self.download_cap)
             s.write_images_to_file(results, WALLPAPER_DEFAULT_CACHE)
 
             # Start downloading images from the cache.

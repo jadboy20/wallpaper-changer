@@ -99,14 +99,58 @@ class HipWallpaperScraper(Scraper):
             cache = f.readlines()
 
         for link in cache:
-            link = link.strip("\n")
-            # Download image and store it in the appropriate filename
-            filename = os.path.basename(link).strip("\n")
-            IMAGE_PATH = os.path.join(directory, filename)
-            logging.info("Downloading '{}'. Saving to {}.".format(link, IMAGE_PATH))
-            req = requests.get(link)
-            if req.status_code != 200:
-                logging.warning("{} code returned!".format(req.status_code))
-            with open(IMAGE_PATH, 'wb') as f:
-                f.write(req.content)
+            w = WallpaperLink(link, directory)
+            w.download()
+
+
+class WallpaperLink(object):
+
+    def __init__(self, link=None, save_to=None):
+        self.link = link
+        self.save_to = save_to
+
+    def __str__(self):
+        return str(self._link)
+
+    @property
+    def link(self):
+        return self._link
+
+    @link.setter
+    def link(self, val):
+        self._link = str(val).replace("\n", "")
+
+    def get_basename(self):
+        return os.path.basename(self._link)
+
+    @property
+    def save_to(self):
+        return self._save_to
+
+    @save_to.setter
+    def save_to(self, val):
+        if os.path.isdir(val):
+            self._save_to = val
+        else:
+            raise EnvironmentError("{} is not a directory".format(val))
+
+    @property
+    def save_path(self):
+        return os.path.join(self.save_to, self.get_basename())
+
+    def save_path_exists(self):
+        """Return true if the save path already exists. False otherwise"""
+        return os.path.exists(self.save_path)
+
+    def download(self):
+        if self.save_path_exists() is False:
+            req = requests.get(self.link)
+            if req.status_code == 200:
+                print("Saving to {}".format(self.save_path))
+                with open(self.save_path, 'wb') as f:
+                    f.write(req.content)
+            else:
+                logging.error("Unable to download {}. Got status code: {}".format(self.link, req.status_code))
+        else:
+                logging.info("{} already exists. Not downloading.".format(self.save_path))
 

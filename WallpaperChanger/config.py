@@ -25,7 +25,8 @@ class Config(object):
             'log-directory': os.path.expanduser(r"~\wallpaper.log"),
             'randomise': 'False',
             'online-mode': 'False',
-            'query': 'Halo'
+            'query': 'Halo',
+            'download-cap': 10
         }
 
     @property
@@ -160,6 +161,18 @@ class Config(object):
     @query.setter
     def query(self, val):
         self._config['DEFAULT']['query'] = str(val)
+
+    @property
+    def download_cap(self):
+        """Getter for the maximum number of images to download. Will not download any more than this amount."""
+        return int(self._config['DEFAULT']['download-cap'])
+
+    @download_cap.setter
+    def download_cap(self, val):
+        if type(val) is not int:
+            raise ValueError("'download_cap' must be a of type 'int'")
+
+        self._config['DEFAULT']['download-cap'] = val
 
     def save_config(self):
         """Save the config to file.
