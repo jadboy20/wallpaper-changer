@@ -7,10 +7,13 @@ from .error import *
 
 _MAX_CYCLE_SPEED = 3600
 _MIN_CYCLE_SPEED = 5
+
+
 class Config(object):
     """
     Configuration object for wall paper.
     """
+
     def __init__(self):
         self._filename = "./wallpaper.conf"
         self._config = configparser.ConfigParser()
@@ -46,8 +49,8 @@ class Config(object):
         if os.path.isdir(_FILENAME_DIR):
             self._filename = val
         else:
-            raise EnvironmentError("Unable to find the directory '{}'".format(_FILENAME_DIR))
-
+            raise EnvironmentError(
+                "Unable to find the directory '{}'".format(_FILENAME_DIR))
 
     @property
     def cycle_speed(self):
@@ -77,9 +80,11 @@ class Config(object):
             if (val >= 0) and (val <= _MAX_CYCLE_SPEED):
                 self._config['DEFAULT']['cycle-speed'] = str(val)
             else:
-                raise ValueError("'cycle-speed' must be between 5 and {}".format(_MAX_CYCLE_SPEED))
+                raise ValueError(
+                    "'cycle-speed' must be between 5 and {}".format(_MAX_CYCLE_SPEED))
         else:
-            raise ValueError("'cycle-speed' must be of type '{}' not '{}'".format(str(int), type(val)))
+            raise ValueError(
+                "'cycle-speed' must be of type '{}' not '{}'".format(str(int), type(val)))
 
     @property
     def gallery_directory(self):
@@ -98,7 +103,8 @@ class Config(object):
         if os.path.exists(str(val)) and os.path.isdir(str(val)):
             self._config['DEFAULT']['gallery-directory'] = val
         else:
-            raise EnvironmentError("'{}' is not a valid directory.".format(str(val)))
+            raise EnvironmentError(
+                "'{}' is not a valid directory.".format(str(val)))
 
     @property
     def log_directory(self):
@@ -120,7 +126,8 @@ class Config(object):
         if os.path.isdir(val):
             self._config['DEFAULT']['log-directory'] = val
         else:
-            raise EnvironmentError("'{}' is not a valid directory.".format(str(val)))
+            raise EnvironmentError(
+                "'{}' is not a valid directory.".format(str(val)))
 
     @property
     def randomise(self):
@@ -190,7 +197,8 @@ class Config(object):
         if os.path.exists(self.filename):
             self._config.read(self.filename)
         else:
-            raise EnvironmentError("Unable to find configuration file '{}'".format(self.filename))
+            raise EnvironmentError(
+                "Unable to find configuration file '{}'".format(self.filename))
 
 
 def tobool(val):
@@ -201,8 +209,7 @@ def tobool(val):
     else:
         # This shouldn't happen. Maybe raise a configuration
         # error.
-        raise ConfigurationFileOptionError("Unable to read {} from option randomise.".format(val))
+        raise ConfigurationFileOptionError(
+            "Unable to read {} from option randomise.".format(val))
 
     return val
-
-

@@ -7,7 +7,8 @@ from lxml import html
 
 OUTPUT_FILE = "../output/test.html"
 ROOT_WEBSITE = "https://hipwallpaper.com"
-OUTPUT_DIR="../output"
+OUTPUT_DIR = "../output"
+
 
 def main():
     theme = parse.quote(input("What would you like to search? "))
@@ -52,6 +53,7 @@ def get_pictures_from_link(link):
     links = tree.xpath('//a[@class="btn btn-primary"]/@href')
     print("Got {} pictures to download!".format(len(links)))
     return links
+
 
 def download_link(link):
     print("Downloading: {}".format(link))

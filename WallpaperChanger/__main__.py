@@ -9,7 +9,6 @@ from . import __version__
 from . import scraper
 
 
-
 def main():
     args = parse_arguments()
     initialise_logging(args)
@@ -38,7 +37,8 @@ def initialise_logging(args):
             datefmt="%Y-%d-%m %I:%M:%S %p"
         )
     except PermissionError as e:
-        print("Do not have permission to create '{}'!".format(e.filename), file=sys.stderr)
+        print("Do not have permission to create '{}'!".format(
+            e.filename), file=sys.stderr)
         print("Exiting program!", file=sys.stderr)
         sys.exit(1)
 
@@ -46,14 +46,20 @@ def initialise_logging(args):
 def parse_arguments():
     # Initialise the arguments.
     parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--cycle-speed", help="Set the rate at which wallpapers change.")
-    parser.add_argument("-d", "--gallery-directory", help="Set the directory where the wallpapers reside.")
-    parser.add_argument("-r", "--randomise", action="store_true", help="Displays the wallpapers in a random order.")
+    parser.add_argument("-c", "--cycle-speed",
+                        help="Set the rate at which wallpapers change.")
+    parser.add_argument("-d", "--gallery-directory",
+                        help="Set the directory where the wallpapers reside.")
+    parser.add_argument("-r", "--randomise", action="store_true",
+                        help="Displays the wallpapers in a random order.")
     parser.add_argument("-v", "--verbose", action="store_true")
-    parser.add_argument("--log-directory", help="Creates and logs to log file provided here. Must contain absolute path.")
-    parser.add_argument("--configuration-path", help="Where to load the configuration file from.")
+    parser.add_argument(
+        "--log-directory", help="Creates and logs to log file provided here. Must contain absolute path.")
+    parser.add_argument("--configuration-path",
+                        help="Where to load the configuration file from.")
     parser.add_argument("--version", action="store_true")
-    parser.add_argument("-o", "--online-mode", action="store_true", help="Displays images from the web based off themes in the config.")
+    parser.add_argument("-o", "--online-mode", action="store_true",
+                        help="Displays images from the web based off themes in the config.")
     parser.description = "A program that cycles through wallpapers for your desktop."
     args = parser.parse_args()
 
