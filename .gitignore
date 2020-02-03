@@ -10,3 +10,7 @@ Images/
 .venvwallpaper/
 WallpaperChanger/dist/
 WallpaperChanger/build/
+build/
+dist/
+output/
+changer.spec
