@@ -20,7 +20,7 @@ case "$1" in
 
         pip install -r requirements.txt
 
-        pyinstaller --onefile changer.py
+        pyinstaller --onefile --noconsol changer.py
         ;;
 
     *)
