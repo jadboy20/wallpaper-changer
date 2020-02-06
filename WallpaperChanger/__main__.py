@@ -7,6 +7,7 @@ import traceback
 from . import app
 from . import __version__
 from . import scraper
+from . import server
 
 
 def main():
@@ -16,7 +17,8 @@ def main():
     logging.info("App started!")
 
     try:
-        app.App(args)
+        #app.App(args)
+        server.main()
     except KeyboardInterrupt:
         logging.info("Keyboard Interrupt! Exiting app...")
     except Exception:
