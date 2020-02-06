@@ -7,6 +7,7 @@ from queue import Queue, Empty
 import pickle
 from . import config, _SERVER_PORT, _SERVER_MAX_CONN
 from . import client
+import logging
 
 
 
@@ -21,6 +22,7 @@ class Server(object):
         self._inputs = []
         self._outputs = []
         self._message_queues = {}
+        self._exit = False
 
     def bind(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -57,13 +59,22 @@ class Server(object):
                         # A readable client socket has data
                         print("Received {} from {}".format(
                             data, s.getpeername()))
-                        self._message_queues[s].put(data)
 
+
+                        response = "OK"
                         payload = self.unjar_payload(data)
+
+                        if payload['command'] == "KILL":
+                            logging.info("Got Kill Command. Good bye!")
+                            self._exit = True
+
 
                         # Add output channel for response
                         if s not in self._outputs:
                             self._outputs.append(s)
+
+                        self._message_queues[s].put(response.encode('utf-8'))
+
                     else:
                         # Interpret empty result as closed connection
                         print("Closing {}".format(s.getpeername()))
@@ -85,7 +96,11 @@ class Server(object):
                     self._outputs.remove(s)
                 else:
                     print("Sending {} to {}".format(next_msg, s.getpeername()))
-                    s.send(next_msg)
+                    s.sendall(next_msg)
+
+                    if self._exit:
+                        # Exit the app.
+                        sys.exit(0)
 
             for s in exception:
                 print("Handling exception condition for {}".format(s.getpeername()))
@@ -97,13 +112,19 @@ class Server(object):
                 # Remove message queue
                 del self._message_queues[s]
 
+        logging.info("Exiting app")
+
     def unjar_payload(self, payload):
         return pickle.loads(payload)
 
 
 
+
+
 def main():
+    # We will want to spawn this as a daemon.
     if client.Client().ping_server() is False:
+
         Server().run()
     else:
         print("Service of server is running.")

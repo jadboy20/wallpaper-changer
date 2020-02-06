@@ -37,6 +37,7 @@ class Client(object):
                 else:
                     s.sendall(message.encode('utf-8'))
                 data = s.recv(1024)
+                print("Got: {}".format(data))
                 s.close()
         except (ConnectionRefusedError, socket.timeout):
             running = False
@@ -48,7 +49,7 @@ class Client(object):
         return pickle.dumps(obj)
 
     def send_test(self):
-        payload = self.pickle_payload()
+        payload = self.pickle_payload(command="KILL")
         self._send_message_with_response(payload)
 
 
