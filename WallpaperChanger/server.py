@@ -7,9 +7,9 @@ from queue import Queue, Empty
 import pickle
 from . import config, _SERVER_PORT, _SERVER_MAX_CONN
 from . import client
+from . import wallpaper
 import logging
-import threading
-
+import time
 
 
 
@@ -17,7 +17,7 @@ import threading
 
 
 class Server(object):
-    def __init__(self):
+    def __init__(self, args):
         self._sock = None
         self.address = ("", _SERVER_PORT)
         self._inputs = []
@@ -25,12 +25,22 @@ class Server(object):
         self._message_queues = {}
         self._exit = False
         self._duration = 10
-        self._update_timer()
+        self.timeout = self.get_timeout(10)
 
         self._callbacks = {
             'KILL': self.callback_kill,
             'RSTTMR': self.callback_reset_timer
         }
+        self.wp = wallpaper.Wallpaper(args)
+
+    def check_timer(self, timer):
+        if time.time() > timer:
+            return True
+        return False
+
+    def get_timeout(self, duration):
+        return time.time() + duration
+
 
     def bind(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -42,9 +52,6 @@ class Server(object):
         self._sock.listen(_SERVER_MAX_CONN)
         self._inputs.append(self._sock)
 
-    def _update_timer(self):
-        print("Hello")
-        threading.Timer(self._duration, self._update_timer).start()
 
     def run(self):
         self.bind()
@@ -127,6 +134,10 @@ class Server(object):
                 # Remove message queue
                 del self._message_queues[s]
 
+            if self.check_timer(self.timeout):
+                self.timer_callback()
+                self.timeout = self.get_timeout(10)
+
         logging.info("Exiting app")
 
     def unjar_payload(self, payload):
@@ -136,26 +147,25 @@ class Server(object):
         logging.info("Got Kill Command. Good bye!")
         self._exit = True
 
+    def timer_callback(self):
+        print("Changing image")
+        self.wp.next_image()
+
     def callback_reset_timer(self, *args):
         # If args is nothing, then we will not change the time.
         print(args)
         if (len(args) == 0) and (args[0] is not int):
             return
         else:
-            self._duration = args[0]
-            self._update_timer()
+            self.timer_callback()
+            self.timeout = self.get_timeout(args[0])
+            return "OK"
 
-
-
-
-
-
-
-def main():
+def main(args):
     # We will want to spawn this as a daemon.
     if client.Client().ping_server() is False:
 
-        Server().run()
+        Server(args).run()
     else:
         print("Service of server is running.")
 

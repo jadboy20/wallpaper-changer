@@ -22,6 +22,7 @@ class Wallpaper(object):
         self.gallery_directory = params.gallery_directory
         self.randomise = params.randomise
         self.config = config.Config()
+        self.prev_num = -1
 
         # Load the config file.
         if params.configuration_path is None:
@@ -137,6 +138,21 @@ class Wallpaper(object):
         # Print as string incase message is passed as a non-string.
         logging.log(level=level, msg=str(message))
 
+    def next_image(self):
+        rand_num = random.randint(0, len(self.images) - 1)
+        # Only pick number if its not the same as the last.
+        # This will prevent similar images being displayed
+        # consecutively, thus giving the illusion of randomness.
+        if self.prev_num != rand_num:
+            # Possibly (but very unlikely) that will be out of range!
+            try:
+                self.loadImage(self.images[rand_num])
+            except IndexError:
+                self.vprint("Random number {} not in array range!".format(
+                    rand_num), level=logging.WARNING)
+
+            self.prev_num = rand_num
+
     def run(self):
         if self.randomise:
             self.vprint("Random playback selected.")
@@ -145,24 +161,10 @@ class Wallpaper(object):
 
             # Pick images out randomly, rather than in the order they are
             # in the directory.
-            prev_num = -1
+            self.prev_num = -1
 
             while True:
-                # Pick a number, any number!
-                rand_num = random.randint(0, len(self.images) - 1)
-                # Only pick number if its not the same as the last.
-                # This will prevent similar images being displayed
-                # consecutively, thus giving the illusion of randomness.
-                if prev_num != rand_num:
-                    # Possibly (but very unlikely) that will be out of range!
-                    try:
-                        self.loadImage(self.images[rand_num])
-                    except IndexError:
-                        self.vprint("Random number {} not in array range!".format(
-                            rand_num), level=logging.WARNING)
-                    else:
-                        time.sleep(self.cycle_speed)
-                    prev_num = rand_num
+                self.next_image()
         else:
             self.vprint("Standard playback selected.")
             while True:

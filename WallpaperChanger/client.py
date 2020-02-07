@@ -19,7 +19,7 @@ class Client(object):
         running = True
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.settimeout(1.0)
+                s.settimeout(10.0)
                 s.connect(('127.0.0.1', _SERVER_PORT))
                 s.close()
         except (ConnectionRefusedError, socket.timeout):
@@ -42,7 +42,7 @@ class Client(object):
         except (ConnectionRefusedError, socket.timeout):
             running = False
 
-    def pickle_payload(self, command="PING", args=[]):
+    def pickle_payload(self, command="PING", args=()):
         obj = {}
         obj['command'] = command
         obj['args'] = args
@@ -60,10 +60,14 @@ class Client(object):
         payload = self.pickle_payload(command="RSTTMR", args=(duration,))
         self._send_message_with_response(payload)
 
+    def next_image(self):
+        payload = self.pickle_payload(command="NXTIMG", args=(duration,))
+        self._send_message_with_response(payload)
+
 
 if __name__ == "__main__":
-    # Client().send_kill()
-    Client().send_reset_timer(3)
+    Client().send_kill()
+    # Client().send_reset_timer(5)
 
 
 

@@ -18,7 +18,7 @@ def main():
 
     try:
         #app.App(args)
-        server.main()
+        server.main(args)
     except KeyboardInterrupt:
         logging.info("Keyboard Interrupt! Exiting app...")
     except Exception:
