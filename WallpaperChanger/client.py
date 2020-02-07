@@ -52,9 +52,18 @@ class Client(object):
         payload = self.pickle_payload(command="KILL")
         self._send_message_with_response(payload)
 
+    def send_kill(self):
+        payload = self.pickle_payload(command="KILL")
+        self._send_message_with_response(payload)
+
+    def send_reset_timer(self, duration):
+        payload = self.pickle_payload(command="RSTTMR", args=(duration,))
+        self._send_message_with_response(payload)
+
 
 if __name__ == "__main__":
-    Client().send_test()
+    # Client().send_kill()
+    Client().send_reset_timer(3)
 
 
 

@@ -8,6 +8,7 @@ import pickle
 from . import config, _SERVER_PORT, _SERVER_MAX_CONN
 from . import client
 import logging
+import threading
 
 
 
@@ -23,6 +24,13 @@ class Server(object):
         self._outputs = []
         self._message_queues = {}
         self._exit = False
+        self._duration = 10
+        self._update_timer()
+
+        self._callbacks = {
+            'KILL': self.callback_kill,
+            'RSTTMR': self.callback_reset_timer
+        }
 
     def bind(self):
         self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,6 +41,10 @@ class Server(object):
     def listen(self):
         self._sock.listen(_SERVER_MAX_CONN)
         self._inputs.append(self._sock)
+
+    def _update_timer(self):
+        print("Hello")
+        threading.Timer(self._duration, self._update_timer).start()
 
     def run(self):
         self.bind()
@@ -60,14 +72,17 @@ class Server(object):
                         print("Received {} from {}".format(
                             data, s.getpeername()))
 
-
                         response = "OK"
                         payload = self.unjar_payload(data)
 
-                        if payload['command'] == "KILL":
-                            logging.info("Got Kill Command. Good bye!")
-                            self._exit = True
+                        command = payload['command']
 
+                        if command in self._callbacks:
+                            resp = self._callbacks[command](*payload['args'])
+                            if resp is not None:
+                                response = resp
+                        else:
+                            response = "ERROR"
 
                         # Add output channel for response
                         if s not in self._outputs:
@@ -116,6 +131,21 @@ class Server(object):
 
     def unjar_payload(self, payload):
         return pickle.loads(payload)
+
+    def callback_kill(self, *args):
+        logging.info("Got Kill Command. Good bye!")
+        self._exit = True
+
+    def callback_reset_timer(self, *args):
+        # If args is nothing, then we will not change the time.
+        print(args)
+        if (len(args) == 0) and (args[0] is not int):
+            return
+        else:
+            self._duration = args[0]
+            self._update_timer()
+
+
 
 
 
